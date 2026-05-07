@@ -125,7 +125,7 @@ export default function NotificationListPage() {
         {
             title: 'Người gửi',
             key: 'sender',
-            width: 200,
+            width: 220,
             render: (_, r) => (
                 <Space>
                     <Avatar src={r.senderAvatar} size={32} style={{ background: '#1a1a2e', flexShrink: 0 }}>
@@ -133,7 +133,9 @@ export default function NotificationListPage() {
                     </Avatar>
                     <div>
                         <div style={{ fontSize: 13, fontWeight: 500 }}>{r.senderName}</div>
-                        <div style={{ fontSize: 11, color: '#8c8c8c' }}>Admin</div>
+                        <div style={{ fontSize: 11, color: '#8c8c8c' }}>
+                            {r.senderUsername ? `@${r.senderUsername}` : 'Admin'}
+                        </div>
                     </div>
                 </Space>
             ),

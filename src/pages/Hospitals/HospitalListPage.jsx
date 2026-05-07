@@ -231,7 +231,7 @@ export default function HospitalListPage() {
         })
     }
 
-    // ── Delete all — khôi phục filterDesc từ v1 ────────────────────────────────
+    // ── Delete all ────────────────────────────────────────────────────────────
     const handleDeleteAll = () => {
         const hasFilter = filters.name || filters.province || filters.ward
         const filterDesc = hasFilter
@@ -334,7 +334,6 @@ export default function HospitalListPage() {
                         <div>🔄 Cập nhật: <strong>{updated}</strong> bệnh viện</div>
                         <div>⏭️ Bỏ qua: <strong>{skipped}</strong> dòng</div>
 
-                        {/* Cảnh báo trùng trong file */}
                         {inFileDuplicates.length > 0 && (
                             <div style={{ marginTop: 12, padding: '10px 14px', background: '#fff7e6', border: '1px solid #ffd591', borderRadius: 8 }}>
                                 <div style={{ fontWeight: 600, color: '#d46b08', marginBottom: 6 }}>
@@ -348,7 +347,6 @@ export default function HospitalListPage() {
                             </div>
                         )}
 
-                        {/* Cảnh báo đã tồn tại trong DB */}
                         {updated > 0 && inFileDuplicates.length === 0 && (
                             <div style={{ marginTop: 10, fontSize: 12, color: '#8c8c8c' }}>
                                 💡 {updated} bệnh viện đã tồn tại trong hệ thống và được cập nhật lại dữ liệu.
@@ -433,11 +431,36 @@ export default function HospitalListPage() {
         preserveSelectedRowKeys: false,
     }
 
+    // ── Subtitle với filter tags inline ───────────────────────────────────────
+    const subtitleNode = (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span>Tổng cộng {total} bệnh viện trong hệ thống</span>
+            {filters.name && (
+                <Tag
+                    closable
+                    color="blue"
+                    onClose={() => { setNameSearch(''); setFilters(f => ({ ...f, name: undefined, page: 1 })) }}
+                >
+                    Tên: {filters.name}
+                </Tag>
+            )}
+            {filters.province && (
+                <Tag
+                    closable
+                    color="green"
+                    onClose={() => { filterArea.reset(); setFilters(f => ({ ...f, province: undefined, ward: undefined, page: 1 })) }}
+                >
+                    {filters.ward ? `${filters.ward}, ${filters.province}` : filters.province}
+                </Tag>
+            )}
+        </div>
+    )
+
     return (
         <div>
             <PageHeader
                 title="Quản lý bệnh viện"
-                subtitle={`Tổng cộng ${total} bệnh viện trong hệ thống`}
+                subtitle={subtitleNode}
                 extra={[
                     <Button key="template" icon={<DownloadOutlined />} onClick={handleDownloadTemplate}>Tải file mẫu</Button>,
                     <Button key="import" icon={<UploadOutlined />} loading={importing} onClick={() => document.getElementById('import-hospital-file').click()}>Nhập file</Button>,
@@ -455,35 +478,60 @@ export default function HospitalListPage() {
 
             <input id="import-hospital-file" type="file" accept=".csv,.xlsx,.xls" style={{ display: 'none' }} onChange={handleImportFile} />
 
-            {/* ── Chip filter ── */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                {MISSING_CHIPS.map((chip) => {
-                    const active = activeChip === chip.value
-                    return (
-                        <button
-                            key={chip.value}
-                            onClick={() => handleChipClick(chip.value)}
-                            style={{
-                                display: 'flex', alignItems: 'center', gap: 8,
-                                padding: '8px 16px', borderRadius: 10, cursor: 'pointer',
-                                border: active ? `2px solid ${chip.color}` : '2px solid transparent',
-                                background: active ? `${chip.color}12` : '#fff',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
-                                transition: 'all 0.15s', outline: 'none',
-                            }}
-                        >
-                            <span style={{ fontSize: 16 }}>{chip.emoji}</span>
-                            <span style={{ fontWeight: active ? 700 : 500, color: active ? chip.color : '#595959', fontSize: 13 }}>
-                                {chip.label}
-                            </span>
-                            {active && total > 0 && (
-                                <span style={{ background: chip.color, color: '#fff', borderRadius: 10, padding: '1px 8px', fontSize: 11, fontWeight: 700 }}>
-                                    {total}
+            {/* ── Chip filter + nút Xoá tất cả cùng dòng ── */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                {/* Chips bên trái */}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {MISSING_CHIPS.map((chip) => {
+                        const active = activeChip === chip.value
+                        return (
+                            <button
+                                key={chip.value}
+                                onClick={() => handleChipClick(chip.value)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 8,
+                                    padding: '8px 16px', borderRadius: 10, cursor: 'pointer',
+                                    border: active ? `2px solid ${chip.color}` : '2px solid transparent',
+                                    background: active ? `${chip.color}12` : '#fff',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+                                    transition: 'all 0.15s', outline: 'none',
+                                }}
+                            >
+                                <span style={{ fontSize: 16 }}>{chip.emoji}</span>
+                                <span style={{ fontWeight: active ? 700 : 500, color: active ? chip.color : '#595959', fontSize: 13 }}>
+                                    {chip.label}
                                 </span>
-                            )}
-                        </button>
-                    )
-                })}
+                                {active && total > 0 && (
+                                    <span style={{ background: chip.color, color: '#fff', borderRadius: 10, padding: '1px 8px', fontSize: 11, fontWeight: 700 }}>
+                                        {total}
+                                    </span>
+                                )}
+                            </button>
+                        )
+                    })}
+                </div>
+
+                {/* Nút Xoá tất cả bên phải — cùng chiều cao với chip */}
+                {total > 0 && (
+                    <button
+                        onClick={handleDeleteAll}
+                        disabled={deletingAll}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: 8,
+                            padding: '8px 16px', borderRadius: 10, cursor: deletingAll ? 'not-allowed' : 'pointer',
+                            border: '2px solid #ff4d4f',
+                            background: '#fff1f0',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+                            transition: 'all 0.15s', outline: 'none',
+                            opacity: deletingAll ? 0.6 : 1,
+                        }}
+                    >
+                        <DeleteOutlined style={{ color: '#e53935', fontSize: 14 }} />
+                        <span style={{ fontWeight: 600, color: '#e53935', fontSize: 13 }}>
+                            Xoá tất cả {total} bệnh viện{(filters.name || filters.province) ? ' (theo bộ lọc)' : ''}
+                        </span>
+                    </button>
+                )}
             </div>
 
             <Card style={cardStyle}>
@@ -539,34 +587,9 @@ export default function HospitalListPage() {
 
                     {/* Nút tìm kiếm */}
                     <Col xs={24} sm={12} lg={3}>
-                        <Button type="primary" Thêm style={{ width: '100%' }} icon={<SearchOutlined />} onClick={applyFilter}>Tìm kiếm</Button>
+                        <Button type="primary" style={{ width: '100%' }} icon={<SearchOutlined />} onClick={applyFilter}>Tìm kiếm</Button>
                     </Col>
                 </Row>
-
-                {/* Filter tags + Xoá tất cả — cùng 1 dòng */}
-                {(filters.name || filters.province || total > 0) && (
-                    <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-                        {/* Tags bên trái */}
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                            {filters.name && (
-                                <Tag closable color="blue" onClose={() => { setNameSearch(''); setFilters(f => ({ ...f, name: undefined, page: 1 })) }}>
-                                    Tên: {filters.name}
-                                </Tag>
-                            )}
-                            {filters.province && (
-                                <Tag closable color="green" onClose={() => { filterArea.reset(); setFilters(f => ({ ...f, province: undefined, ward: undefined, page: 1 })) }}>
-                                    {filters.ward ? `${filters.ward}, ${filters.province}` : filters.province}
-                                </Tag>
-                            )}
-                        </div>
-                        {/* Nút xoá tất cả bên phải */}
-                        {total > 0 && (
-                            <Button danger size="small" icon={<DeleteOutlined />} loading={deletingAll} onClick={handleDeleteAll}>
-                                Xoá tất cả {total} bệnh viện{(filters.name || filters.province) ? ' (theo bộ lọc)' : ''}
-                            </Button>
-                        )}
-                    </div>
-                )}
 
                 {/* Selection action bar */}
                 {selectedRowKeys.length > 0 && (
@@ -667,7 +690,6 @@ export default function HospitalListPage() {
                                     <iframe title="map" width="100%" height="220" frameBorder="0" style={{ display: 'block', border: 0 }} allowFullScreen referrerPolicy="no-referrer-when-downgrade"
                                         src={`https://www.google.com/maps?q=${detailRecord.latitude},${detailRecord.longitude}&z=16&output=embed`} />
                                 </div>
-
                             </div>
                         )}
                     </>
