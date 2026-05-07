@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Be Vietnam Pro', -apple-system, sans-serif;
+    background-color: #f0f2f5;
+}
+
+/* Scroll */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+/* ── Chỉ áp dụng dark style TRONG login page ── */
+.login-page .ant-input-affix-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.login-page .ant-input-affix-wrapper input {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+.login-page .ant-input-affix-wrapper {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.login-page .ant-input-affix-wrapper:hover,
+.login-page .ant-input-affix-wrapper-focused {
+    border-color: #e53935 !important;
+}
+
+.login-page .ant-input-password-icon {
+    color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Sidebar menu */
+.ant-menu-dark .ant-menu-item {
+    margin: 2px 8px !important;
+    border-radius: 8px !important;
+    width: calc(100% - 16px) !important;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+    background: linear-gradient(135deg, #e53935, #b71c1c) !important;
+}
