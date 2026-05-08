@@ -80,13 +80,15 @@ export default function NotificationListPage() {
                 const meta = DESTINATION_META[r.destination] ?? { label: r.destination, color: '#8c8c8c', emoji: '📢' }
                 return (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                        <Tag style={{
-                            color: meta.color, borderColor: `${meta.color}40`,
-                            background: `${meta.color}10`, fontWeight: 600,
-                            width: 'fit-content', marginBottom: 5,
-                        }}>
-                            {meta.emoji} {meta.label}
-                        </Tag>
+                        {r.destination !== 'user' && (
+                            <Tag style={{
+                                color: meta.color, borderColor: `${meta.color}40`,
+                                background: `${meta.color}10`, fontWeight: 600,
+                                width: 'fit-content', marginBottom: 5,
+                            }}>
+                                {meta.emoji} {meta.label}
+                            </Tag>
+                        )}
                         {r.destination === 'blood_type' && r.bloodType && (
                             <Tag color={BLOOD_COLORS[r.bloodType] ?? 'red'}
                                 style={{ fontWeight: 700, width: 'fit-content' }}>
