@@ -128,12 +128,12 @@ export default function ProfilePage() {
                 {/* ── Cột trái: Avatar + info nhanh ── */}
                 <Col xs={24} lg={7}>
                     <Card style={cardStyle}>
-                        <div style={{ textAlign: 'center', padding: '20px 0 12px' }}>
+                        <div style={{ textAlign: 'center' }}>
                             <div style={{ position: 'relative', display: 'inline-block', marginBottom: 4 }}>
                                 <Avatar
                                     src={account?.avatar}
                                     icon={<UserOutlined />}
-                                    size={96}
+                                    size={116}
                                     style={{
                                         background: 'linear-gradient(135deg, #e53935, #b71c1c)',
                                         fontSize: 36,
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                                 @{account?.username ?? '—'}
                             </div>
                             <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center', gap: 8 }}>
-                                <Tag color="red" style={{ fontWeight: 600 }}>👑 Quản trị viên</Tag>
+                                <Tag color="red" style={{ fontWeight: 600 }}> Quản trị viên</Tag>
                                 <Tag color="success">Hoạt động</Tag>
                             </div>
                         </div>
@@ -381,7 +381,11 @@ export default function ProfilePage() {
                     <Form.Item
                         label={<span style={{ fontWeight: 600 }}>Email</span>}
                         name="email"
-                        rules={[{ type: 'email', message: 'Email không hợp lệ' }]}
+                        normalize={(value) => value?.trim()}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập email' },
+                            { type: 'email', message: 'Email không hợp lệ' },
+                        ]}
                     >
                         <Input size="large" placeholder="example@email.com" />
                     </Form.Item>

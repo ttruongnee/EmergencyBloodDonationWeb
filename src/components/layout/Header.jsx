@@ -105,7 +105,7 @@ export default function Header({ collapsed, onToggle }) {
                     arrow
                     trigger={['click']}
                 >
-                    <Space style={{ cursor: 'pointer', padding: '4px 8px', borderRadius: 8 }}>
+                    <Space style={{ cursor: 'pointer', padding: '0px 10px', borderRadius: 8 }}>
                         <Avatar
                             src={account?.avatar || undefined}
                             icon={!account?.avatar && <UserOutlined />}
