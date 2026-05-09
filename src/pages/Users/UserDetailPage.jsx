@@ -383,7 +383,7 @@ export default function UserDetailPage() {
                                         }
                                     </Descriptions.Item>
                                     <Descriptions.Item label="Địa chỉ" span={2}>
-                                        {[profile.ward, profile.district, profile.province].filter(Boolean).join(', ')
+                                        {[profile.ward, profile.province].filter(Boolean).join(', ')
                                             || <span style={{ color: '#bbb' }}>Chưa cập nhật</span>
                                         }
                                     </Descriptions.Item>

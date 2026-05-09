@@ -13,6 +13,8 @@ const accountApi = {
 
     updateProfile: (id, data) =>
         axiosClient.put(`/accounts/${id}/profile`, data),
+
+    createAdmin: (data) => axiosClient.post('/accounts/create-admin', data),
 }
 
 export default accountApi

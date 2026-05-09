@@ -98,7 +98,7 @@ export default function NotificationListPage() {
                         {r.destination === 'area' && (
                             <Text style={{ fontSize: 12, color: '#595959' }}>
                                 <EnvironmentOutlined style={{ marginRight: 4 }} />
-                                {[r.ward, r.district, r.province].filter(Boolean).join(', ') || '—'}
+                                {[r.ward, r.province].filter(Boolean).join(', ') || '—'}
                             </Text>
                         )}
                         {r.destination === 'user' && r.targetUserName && (

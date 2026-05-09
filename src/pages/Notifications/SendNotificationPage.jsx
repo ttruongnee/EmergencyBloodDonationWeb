@@ -109,10 +109,9 @@ export default function SendNotificationPage() {
         }
 
         if (values.destination === 'area') {
-            // Hệ 2 cấp: Tỉnh → Phường/Xã (districtOptions = phường/xã)
+            // Hệ 2 cấp: Tỉnh → Phường/Xã 
             payload.province = area.normalizedProvince || undefined
-            payload.district = null
-            payload.ward = area.normalizedDistrict || undefined
+            payload.ward = area.normalizedWard || undefined
         }
 
         if (values.destination === 'user') {
@@ -295,23 +294,23 @@ export default function SendNotificationPage() {
                                             </Form.Item>
                                         </Col>
 
-                                        {/* Phường/Xã — dùng districtOptions vì hệ 2 cấp */}
+                                        {/* Phường/Xã — dùng wardOptions vì hệ 2 cấp */}
                                         <Col span={12}>
                                             <Form.Item label="Phường / Xã" name="ward">
                                                 <Select
                                                     size="large"
                                                     placeholder="Chọn phường/xã..."
-                                                    loading={area.loadingD}
+                                                    loading={area.loadingW}
                                                     showSearch
                                                     optionFilterProp="label"
-                                                    options={area.districtOptions}
-                                                    disabled={!area.selectedProvince || area.loadingD}
+                                                    options={area.wardOptions}
+                                                    disabled={!area.selectedProvince || area.loadingW}
                                                     allowClear
                                                     onChange={(val, opt) => {
-                                                        area.onDistrictChange(val, opt)
+                                                        area.onWardChange(val, opt)
                                                     }}
                                                     onClear={() => {
-                                                        area.onDistrictChange(null, { label: '' })
+                                                        area.onWardChange(null, { label: '' })
                                                     }}
                                                 />
                                             </Form.Item>
@@ -329,7 +328,7 @@ export default function SendNotificationPage() {
                                             📍 Gửi đến:{' '}
                                             <strong>
                                                 {[
-                                                    area.normalizedDistrict,
+                                                    area.normalizedWard,
                                                     area.normalizedProvince,
                                                 ].filter(Boolean).join(', ')}
                                             </strong>

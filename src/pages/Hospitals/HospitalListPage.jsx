@@ -75,10 +75,10 @@ export default function HospitalListPage() {
 
     const [pendingWard, setPendingWard] = useState(null)
     useEffect(() => {
-        if (!pendingWard || formArea.districtOptions.length === 0) return
-        const wOpt = formArea.districtOptions.find(o => normalizeArea(o.label) === pendingWard)
-        if (wOpt) { formArea.onDistrictChange(wOpt.value, wOpt); setPendingWard(null) }
-    }, [formArea.districtOptions, pendingWard])
+        if (!pendingWard || formArea.wardOptions.length === 0) return
+        const wOpt = formArea.wardOptions.find(o => normalizeArea(o.label) === pendingWard)
+        if (wOpt) { formArea.onWardChange(wOpt.value, wOpt); setPendingWard(null) }
+    }, [formArea.wardOptions, pendingWard])
 
     const autoSelectArea = async (provinceName, wardName) => {
         if (!provinceName) return
@@ -168,7 +168,7 @@ export default function HospitalListPage() {
             page: 1,
             name: nameSearch || undefined,
             province: filterArea.normalizedProvince || undefined,
-            ward: filterArea.normalizedDistrict || undefined,
+            ward: filterArea.normalizedWard || undefined,
         }))
     }
 
@@ -214,7 +214,7 @@ export default function HospitalListPage() {
         const payload = {
             name: values.name, address: values.address || null, website: values.website || null,
             latitude: values.latitude || null, longitude: values.longitude || null,
-            province: formArea.normalizedProvince || null, district: null, ward: formArea.normalizedDistrict || null,
+            province: formArea.normalizedProvince || null, ward: formArea.normalizedWard || null,
         }
         editRecord ? updateH({ id: editRecord.id, data: payload }) : createH(payload)
     }
@@ -386,8 +386,8 @@ export default function HospitalListPage() {
         {
             title: 'Phường / Xã',
             key: 'ward', width: 150,
-            render: (_, r) => r.ward || r.district
-                ? <span>{r.ward || r.district}</span>
+            render: (_, r) => r.ward
+                ? <span>{r.ward}</span>
                 : <span style={{ color: '#bbb' }}>—</span>,
         },
         {
@@ -566,12 +566,12 @@ export default function HospitalListPage() {
                     <Col xs={24} sm={12} lg={5}>
                         <Select
                             placeholder="Phường / Xã" style={{ width: '100%' }}
-                            loading={filterArea.loadingD} showSearch optionFilterProp="label"
-                            options={filterArea.districtOptions}
-                            value={filterArea.selectedDistrict?.id ?? undefined}
+                            loading={filterArea.loadingW} showSearch optionFilterProp="label"
+                            options={filterArea.wardOptions}
+                            value={filterArea.selectedWard?.id ?? undefined}
                             disabled={!filterArea.selectedProvince}
-                            allowClear onChange={filterArea.onDistrictChange}
-                            onClear={() => filterArea.onDistrictChange(null, { label: '' })}
+                            allowClear onChange={filterArea.onWardChange}
+                            onClear={() => filterArea.onWardChange(null, { label: '' })}
                         />
                     </Col>
 
@@ -661,7 +661,7 @@ export default function HospitalListPage() {
                                 {detailRecord.website ? <a href={detailRecord.website} target="_blank" rel="noreferrer">{detailRecord.website}</a> : <span style={{ color: '#bbb' }}>Chưa cập nhật</span>}
                             </Descriptions.Item>
                             <Descriptions.Item label="Tỉnh / Thành phố">{detailRecord.province || <span style={{ color: '#bbb' }}>—</span>}</Descriptions.Item>
-                            <Descriptions.Item label="Phường / Xã">{detailRecord.ward || detailRecord.district || <span style={{ color: '#bbb' }}>—</span>}</Descriptions.Item>
+                            <Descriptions.Item label="Phường / Xã">{detailRecord.ward || <span style={{ color: '#bbb' }}>—</span>}</Descriptions.Item>
                             <Descriptions.Item label="Toạ độ">
                                 {detailRecord.latitude && detailRecord.longitude
                                     ? `${detailRecord.latitude}, ${detailRecord.longitude}`
@@ -760,20 +760,20 @@ export default function HospitalListPage() {
                             <Col span={12}>
                                 <Form.Item label="Phường / Xã" style={{ marginBottom: 0 }}>
                                     <Select placeholder="Chọn phường/xã..."
-                                        loading={formArea.loadingD}
+                                        loading={formArea.loadingW}
                                         showSearch
                                         optionFilterProp="label"
-                                        options={formArea.districtOptions}
-                                        value={formArea.selectedDistrict?.id ?? undefined}
+                                        options={formArea.wardOptions}
+                                        value={formArea.selectedWard?.id ?? undefined}
                                         disabled={!formArea.selectedProvince}
-                                        allowClear onChange={(val, opt) => formArea.onDistrictChange(val, opt)}
-                                        onClear={() => formArea.onDistrictChange(null, { label: '' })} />
+                                        allowClear onChange={(val, opt) => formArea.onWardChange(val, opt)}
+                                        onClear={() => formArea.onWardChange(null, { label: '' })} />
                                 </Form.Item>
                             </Col>
                         </Row>
                         {formArea.normalizedProvince && (
                             <div style={{ marginTop: 10, padding: '6px 10px', background: '#e3f2fd', borderRadius: 6, fontSize: 12, color: '#1e88e5' }}>
-                                📍 {[formArea.normalizedDistrict, formArea.normalizedProvince].filter(Boolean).join(', ')}
+                                📍 {[formArea.normalizedWard, formArea.normalizedProvince].filter(Boolean).join(', ')}
                             </div>
                         )}
                     </div>

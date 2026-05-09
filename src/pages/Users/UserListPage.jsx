@@ -1,9 +1,11 @@
 import { useState } from 'react'
-import { Table, Card, Input, Space, Button, Avatar, App, Tooltip } from 'antd'
+import {
+    Table, Card, Input, Space, Button, Avatar, App, Tooltip, Modal, Form
+} from 'antd'
 import {
     SearchOutlined, UserOutlined,
     StopOutlined, CheckCircleOutlined,
-    EyeOutlined,
+    EyeOutlined, PlusOutlined,
 } from '@ant-design/icons'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +19,7 @@ export default function UserListPage() {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const { message, modal } = App.useApp()
+    const [adminForm] = Form.useForm()
 
     const [filters, setFilters] = useState({
         status: '',
@@ -24,6 +27,7 @@ export default function UserListPage() {
         pageSize: PAGE_SIZE_DEFAULT,
     })
     const [search, setSearch] = useState('')
+    const [adminModalOpen, setAdminModalOpen] = useState(false)
 
     const { data: res, isLoading } = useQuery({
         queryKey: ['accounts', filters],
@@ -39,6 +43,7 @@ export default function UserListPage() {
     const accounts = res?.data?.items ?? []
     const total = res?.data?.totalCount ?? 0
 
+    // Mutation cập nhật trạng thái (khoá/mở khoá)
     const { mutate: updateStatus, isPending: updating } = useMutation({
         mutationFn: ({ id, status }) => accountApi.updateStatus(id, status),
         onSuccess: (_, { status }) => {
@@ -48,6 +53,17 @@ export default function UserListPage() {
         onError: (err) => message.error(err?.message || 'Thao tác thất bại'),
     })
 
+    // Mutation tạo admin mới
+    const { mutate: createAdminMutate, isPending: creatingAdmin } = useMutation({
+        mutationFn: (data) => accountApi.createAdmin(data),
+        onSuccess: () => {
+            message.success('Tạo tài khoản admin thành công, mật khẩu đã gửi qua email')
+            setAdminModalOpen(false)
+            adminForm.resetFields()
+            // Không cần invalidate vì không ảnh hưởng danh sách user
+        },
+        onError: (err) => message.error(err?.message || 'Tạo thất bại'),
+    })
 
     const handleToggleStatus = (record) => {
         const isBanned = record.status === 'banned'
@@ -171,6 +187,21 @@ export default function UserListPage() {
             <PageHeader
                 title="Quản lý người dùng"
                 subtitle="Xem, khoá và quản lý tài khoản người dùng trong hệ thống"
+                extra={[
+                    <Button
+                        key="create-admin"
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        onClick={() => setAdminModalOpen(true)}
+                        style={{
+                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                            border: 'none',
+                            fontWeight: 600,
+                        }}
+                    >
+                        Thêm Admin
+                    </Button>
+                ]}
             />
 
             {/* Chip filter */}
@@ -244,10 +275,73 @@ export default function UserListPage() {
                 />
             </Card>
 
+            {/* Modal tạo admin */}
+            <Modal
+                title="Tạo tài khoản Admin"
+                open={adminModalOpen}
+                onCancel={() => {
+                    setAdminModalOpen(false)
+                    adminForm.resetFields()
+                }}
+                footer={null}
+                destroyOnClose
+            >
+                <Form
+                    form={adminForm}
+                    layout="vertical"
+                    onFinish={(values) => createAdminMutate(values)}
+                    style={{ marginTop: 16 }}
+                >
+                    <Form.Item
+                        name="username"
+                        label="Tên đăng nhập"
+                        normalize={(value) => value?.trim()}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập tên đăng nhập' },
+                            { min: 4, message: 'Tối thiểu 4 ký tự' },
+                        ]}
+                    >
+                        <Input placeholder="Nhập tên đăng nhập" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        normalize={(value) => value?.trim()}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập email' },
+                            { type: 'email', message: 'Email không hợp lệ' },
+                        ]}
+                    >
+                        <Input placeholder="Nhập địa chỉ email" />
+                    </Form.Item>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+                        <Button onClick={() => {
+                            setAdminModalOpen(false)
+                            adminForm.resetFields()
+                        }}>
+                            Huỷ
+                        </Button>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            loading={creatingAdmin}
+                            style={{
+                                background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                                border: 'none',
+                                fontWeight: 600,
+                            }}
+                        >
+                            Tạo Admin
+                        </Button>
+                    </div>
+                </Form>
+            </Modal>
+
             <style>{`
     .row-banned td { background: #fff5f5 !important; color: #999 !important; }
     .row-banned:hover td { background: #ffe8e8 !important; }
-        `}</style>
+            `}</style>
         </div>
     )
 }

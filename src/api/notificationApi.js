@@ -6,7 +6,7 @@ const notificationApi = {
         axiosClient.get('/notifications/admin/history', { params }),
 
     /** Admin: gửi thông báo broadcast
-     * body: { title, content, destination, bloodType?, province?, district?, ward?, userId? }
+     * body: { title, content, destination, bloodType?, province?, ward?, userId? }
      */
     broadcast: (data) => axiosClient.post('/notifications/broadcast', data),
 }
