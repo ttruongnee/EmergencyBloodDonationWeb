@@ -441,18 +441,16 @@ export default function SendNotificationPage() {
                                                 border: '1px solid #E0E0E0',
                                             }}
                                         />
-                                        <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4, color: '#1A1A2E' }}>
+                                        <div style={{ flex: 1, minWidth: 0, paddingTop: 8 }}>
+                                            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 5, color: '#1A1A2E' }}>
                                                 {preview.title}
                                             </div>
                                             {preview.content && (
-                                                <div style={{ fontSize: 12, color: '#595959', lineHeight: 1.5 }}>
+                                                <div style={{ fontSize: 13, color: '#595959', lineHeight: 1.5 }}>
                                                     {preview.content}
                                                 </div>
                                             )}
-                                            <div style={{ fontSize: 11, color: '#8C8C8C', marginTop: 8 }}>
-                                                Vừa xong
-                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
