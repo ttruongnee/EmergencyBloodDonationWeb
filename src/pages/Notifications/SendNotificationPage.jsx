@@ -422,8 +422,10 @@ export default function SendNotificationPage() {
                                 style={cardStyle}
                             >
                                 <div style={{
-                                    background: '#1a1a2e', borderRadius: 12,
-                                    padding: 16, color: '#fff',
+                                    background: '#F0F0F5',        // xám nhạt thay vì #1a1a2e
+                                    borderRadius: 12,
+                                    padding: 16,
+                                    border: '1px solid #E0E0E0',  // thêm viền nhẹ
                                 }}>
                                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                                         <img
@@ -432,21 +434,23 @@ export default function SendNotificationPage() {
                                             style={{
                                                 width: 70,
                                                 height: 70,
-                                                borderRadius: 10,
+                                                borderRadius: 20,
                                                 objectFit: 'cover',
                                                 flexShrink: 0,
+                                                background: '#FFFFFF',
+                                                border: '1px solid #E0E0E0',
                                             }}
                                         />
                                         <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
+                                            <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4, color: '#1A1A2E' }}>
                                                 {preview.title}
                                             </div>
                                             {preview.content && (
-                                                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.7)', lineHeight: 1.5 }}>
+                                                <div style={{ fontSize: 12, color: '#595959', lineHeight: 1.5 }}>
                                                     {preview.content}
                                                 </div>
                                             )}
-                                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 8 }}>
+                                            <div style={{ fontSize: 11, color: '#8C8C8C', marginTop: 8 }}>
                                                 Vừa xong
                                             </div>
                                         </div>
