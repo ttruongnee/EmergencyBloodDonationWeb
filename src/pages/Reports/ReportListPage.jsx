@@ -6,7 +6,7 @@ import {
 import {
     SearchOutlined, EyeOutlined,
     WarningOutlined, CheckCircleOutlined,
-    CloseCircleOutlined,
+    CloseCircleOutlined, UserOutlined
 } from '@ant-design/icons'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -113,9 +113,16 @@ export default function ReportListPage() {
                     style={{ cursor: 'pointer' }}
                     onClick={() => r.reporterAccountId && navigate(`/users/${r.reporterAccountId}`)}
                 >
-                    <Avatar src={r.reporterAvatar} size={32} style={{ background: '#8e24aa', flexShrink: 0 }}>
-                        {r.reporterName?.[0]}
-                    </Avatar>
+                    <Avatar
+                        src={r.reporterAvatar || undefined}
+                        icon={<UserOutlined />}
+                        size={32}
+                        style={{
+                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                            fontSize: 14,
+                            flexShrink: 0,
+                        }}
+                    />
                     <div>
                         <div style={{ fontWeight: 600, fontSize: 13, color: '#1e88e5' }}>
                             {r.reporterName}
@@ -133,9 +140,15 @@ export default function ReportListPage() {
             width: 160,
             render: (_, r) => r.handlerName ? (
                 <Space>
-                    <Avatar src={r.handlerAvatar} size={28} style={{ background: '#1a1a2e', fontSize: 11 }}>
-                        {r.handlerName?.[0]}
-                    </Avatar>
+                    <Avatar
+                        src={r.handlerAvatar || undefined}
+                        icon={<UserOutlined />}
+                        size={28}
+                        style={{
+                            background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                            fontSize: 12,
+                        }}
+                    />
                     <span style={{ fontSize: 12, fontWeight: 500 }}>{r.handlerName}</span>
                 </Space>
             ) : (
@@ -163,7 +176,7 @@ export default function ReportListPage() {
         {
             title: 'Lý do',
             dataIndex: 'reason',
-            width: 120,
+            width: 140,
             render: (v) => (
                 <Tag color="orange" style={{ whiteSpace: 'normal', maxWidth: 160 }}>
                     {v}
@@ -181,7 +194,7 @@ export default function ReportListPage() {
             title: 'Ngày báo cáo',
             align: 'center',
             dataIndex: 'createdAt',
-            width: 120,
+            width: 100,
             render: (v) => (
                 <span style={{ fontSize: 12, color: '#595959' }}>{formatDateTime(v)}</span>
             ),

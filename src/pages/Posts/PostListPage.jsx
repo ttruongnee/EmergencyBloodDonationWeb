@@ -7,7 +7,7 @@ import {
 import {
     SearchOutlined, EyeOutlined, DeleteOutlined,
     EyeInvisibleOutlined, FileTextOutlined,
-    ExclamationCircleOutlined,
+    ExclamationCircleOutlined, UserOutlined
 } from '@ant-design/icons'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -114,14 +114,29 @@ export default function PostListPage() {
 
     const { mutate: deleteManyPosts, isPending: deletingMany } = useMutation({
         mutationFn: (ids) => postApi.deleteMany(ids),
-        onSuccess: (res) => {
-            const count = res?.data?.succeeded ?? selectedIds.length
-            message.success(`Đã xoá ${count} bài đăng`)
-            setSelectedIds([])
-            queryClient.invalidateQueries({ queryKey: ['posts-admin'] })
+        onSuccess: (res, variables) => {
+            const succeeded = res?.data?.succeeded ?? 0;
+            const selectedCount = variables.length;
+            const skipped = selectedCount - succeeded;
+
+            if (succeeded === 0 && selectedCount > 0) {
+                modal.warning({
+                    title: 'Không thể xoá',
+                    content: 'Tất cả bài đăng đã chọn đều đã có người hiến máu, không thể xoá.',
+                });
+            } else if (skipped > 0) {
+                modal.success({
+                    title: 'Đã xoá một phần',
+                    content: `Đã xoá ${succeeded} bài đăng. ${skipped} bài không thể xoá vì đã có người hiến máu.`,
+                });
+            } else {
+                message.success(`Đã xoá ${succeeded} bài đăng`);
+            }
+            setSelectedIds([]);
+            queryClient.invalidateQueries({ queryKey: ['posts-admin'] });
         },
         onError: (err) => message.error(err?.message || 'Xoá thất bại'),
-    })
+    });
 
     // ── [NEW] Hide all / Unhide all theo filter ────────────────────────────────
     const { mutate: hideAllPosts, isPending: hidingAll } = useMutation({
@@ -335,9 +350,16 @@ export default function PostListPage() {
             width: 190,
             render: (_, r) => (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <Avatar src={r.postedByAvatar} size={28} style={{ background: '#e53935', flexShrink: 0 }}>
-                        {r.postedByName?.[0]}
-                    </Avatar>
+                    <Avatar
+                        src={r.postedByAvatar || undefined}
+                        icon={<UserOutlined />}
+                        size={28}
+                        style={{
+                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                            flexShrink: 0,
+                            fontSize: 12,
+                        }}
+                    />
                     <div style={{ minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden' }}>
                             {r.postedByName}

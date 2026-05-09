@@ -255,12 +255,15 @@ export default function ReportDetailPage() {
                                 }}
                             >
                                 <Avatar
-                                    src={report.reporterAvatar}
+                                    src={report.reporterAvatar || undefined}
+                                    icon={<UserOutlined />}
                                     size={44}
-                                    style={{ background: '#8e24aa', flexShrink: 0 }}
-                                >
-                                    {report.reporterName?.[0]}
-                                </Avatar>
+                                    style={{
+                                        background: 'linear-gradient(135deg, #8e24aa, #6a1b9a)',
+                                        fontSize: 18,
+                                        flexShrink: 0,
+                                    }}
+                                />
                                 <div>
                                     <div style={{
                                         fontWeight: 600, fontSize: 14,
@@ -291,15 +294,15 @@ export default function ReportDetailPage() {
                                 {report.handlerName ? (
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                         <Avatar
-                                            src={report.handlerAvatar}
+                                            src={report.handlerAvatar || undefined}
+                                            icon={<UserOutlined />}
                                             size={44}
                                             style={{
                                                 background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                                                fontSize: 18,
                                                 flexShrink: 0,
                                             }}
-                                        >
-                                            {report.handlerName?.[0]}
-                                        </Avatar>
+                                        />
                                         <div>
                                             <div style={{ fontWeight: 600, fontSize: 14 }}>
                                                 {report.handlerName}
@@ -411,12 +414,14 @@ export default function ReportDetailPage() {
                                                 }}
                                             >
                                                 <Avatar
-                                                    src={report.postAuthorAvatar}
+                                                    src={report.postAuthorAvatar || undefined}
+                                                    icon={<UserOutlined />}
                                                     size={24}
-                                                    style={{ background: '#e53935' }}
-                                                >
-                                                    {report.postAuthorName?.[0]}
-                                                </Avatar>
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                                                        fontSize: 12,
+                                                    }}
+                                                />
                                                 <span style={{
                                                     fontWeight: 500,
                                                     color: report.postAuthorAccountId ? '#1e88e5' : '#1a1a2e',

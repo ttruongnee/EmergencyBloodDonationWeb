@@ -6,50 +6,23 @@ import {
     WarningOutlined,
     BellOutlined,
     MedicineBoxOutlined,
-    HeartFilled,
 } from '@ant-design/icons'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 const { Sider } = Layout
 
 const menuItems = [
-    {
-        key: '/dashboard',
-        icon: <DashboardOutlined />,
-        label: 'Tổng quan',
-    },
-    {
-        key: '/users',
-        icon: <UserOutlined />,
-        label: 'Người dùng',
-    },
-    {
-        key: '/posts',
-        icon: <FileTextOutlined />,
-        label: 'Bài đăng',
-    },
-    {
-        key: '/reports',
-        icon: <WarningOutlined />,
-        label: 'Báo cáo vi phạm',
-    },
-    {
-        key: '/notifications',
-        icon: <BellOutlined />,
-        label: 'Thông báo',
-    },
-    {
-        key: '/hospitals',
-        icon: <MedicineBoxOutlined />,
-        label: 'Bệnh viện',
-    },
+    { key: '/dashboard', icon: <DashboardOutlined />, label: 'Tổng quan' },
+    { key: '/users', icon: <UserOutlined />, label: 'Người dùng' },
+    { key: '/posts', icon: <FileTextOutlined />, label: 'Bài đăng' },
+    { key: '/reports', icon: <WarningOutlined />, label: 'Báo cáo vi phạm' },
+    { key: '/notifications', icon: <BellOutlined />, label: 'Thông báo' },
+    { key: '/hospitals', icon: <MedicineBoxOutlined />, label: 'Bệnh viện' },
 ]
 
 export default function Sidebar({ collapsed }) {
     const navigate = useNavigate()
     const location = useLocation()
-
-    // Lấy key active từ path hiện tại
     const selectedKey = '/' + location.pathname.split('/')[1]
 
     return (
@@ -61,17 +34,32 @@ export default function Sidebar({ collapsed }) {
                 overflow: 'auto',
                 height: '100vh',
                 position: 'fixed',
-                left: 0,
-                top: 0,
-                bottom: 0,
+                left: 0, top: 0, bottom: 0,
                 background: '#1a1a2e',
                 zIndex: 100,
             }}
         >
             {/* Logo */}
             <div style={styles.logoBox} onClick={() => navigate('/dashboard')}>
-                <div style={styles.logoIcon}>
-                    <HeartFilled style={{ fontSize: collapsed ? 20 : 22, color: '#fff' }} />
+                <div style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    background: 'transparent',
+                    transition: 'all 0.2s ease',
+                }}>
+                    <img
+                        src="/adaptive-icon.png"
+                        alt="Logo"
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                            display: 'block',
+                        }}
+                    />
                 </div>
                 {!collapsed && (
                     <div style={styles.logoText}>
@@ -81,21 +69,15 @@ export default function Sidebar({ collapsed }) {
                 )}
             </div>
 
-            {/* Divider */}
             <div style={styles.divider} />
 
-            {/* Menu */}
             <Menu
                 mode="inline"
                 theme="dark"
                 selectedKeys={[selectedKey]}
                 items={menuItems}
                 onClick={({ key }) => navigate(key)}
-                style={{
-                    background: 'transparent',
-                    border: 'none',
-                    padding: '8px 0',
-                }}
+                style={{ background: 'transparent', border: 'none', padding: '8px 0' }}
             />
         </Sider>
     )
@@ -103,24 +85,12 @@ export default function Sidebar({ collapsed }) {
 
 const styles = {
     logoBox: {
-        height: 64,
+        height: 80,
         display: 'flex',
         alignItems: 'center',
-        padding: '0 20px',
-        gap: 12,
+        gap: 8,
         overflow: 'hidden',
         cursor: 'pointer',
-    },
-    logoIcon: {
-        width: 40,
-        height: 40,
-        borderRadius: 10,
-        background: 'linear-gradient(135deg, #e53935, #b71c1c)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        boxShadow: '0 4px 12px rgba(229,57,53,0.4)',
     },
     logoText: {
         overflow: 'hidden',
@@ -128,13 +98,13 @@ const styles = {
     logoTitle: {
         color: '#fff',
         fontWeight: 700,
-        fontSize: 15,
+        fontSize: 18,                  // tăng kích thước tiêu đề
         lineHeight: 1.3,
         whiteSpace: 'nowrap',
     },
     logoSub: {
-        color: 'rgba(255,255,255,0.4)',
-        fontSize: 11,
+        color: 'rgba(255,255,255,0.5)',
+        fontSize: 12,                  // tăng nhẹ dòng phụ
         whiteSpace: 'nowrap',
     },
     divider: {

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Table, Card, Button, Tag, Space, Avatar, Tooltip, Typography } from 'antd'
-import { PlusOutlined, EnvironmentOutlined } from '@ant-design/icons'
+import { PlusOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import notificationApi from '../../api/notificationApi'
@@ -106,10 +106,16 @@ export default function NotificationListPage() {
                                 style={{ cursor: r.targetUserAccountId ? 'pointer' : 'default' }}
                                 onClick={() => r.targetUserAccountId && navigate(`/users/${r.targetUserAccountId}`)}
                             >
-                                <Avatar src={r.targetUserAvatar} size={35}
-                                    style={{ background: '#43a047', flexShrink: 0 }}>
-                                    {r.targetUserName?.[0]}
-                                </Avatar>
+                                <Avatar
+                                    src={r.targetUserAvatar || undefined}
+                                    icon={<UserOutlined />}
+                                    size={35}
+                                    style={{
+                                        background: r.targetUserAvatar ? 'transparent' : 'linear-gradient(135deg, #e53935, #b71c1c)',
+                                        fontSize: 16,
+                                        flexShrink: 0,
+                                    }}
+                                />
                                 <div>
                                     <div style={{ fontSize: 13, fontWeight: 500, color: r.targetUserAccountId ? '#1e88e5' : '#595959' }}>
                                         {r.targetUserName}
@@ -130,9 +136,16 @@ export default function NotificationListPage() {
             width: 220,
             render: (_, r) => (
                 <Space>
-                    <Avatar src={r.senderAvatar} size={32} style={{ background: '#1a1a2e', flexShrink: 0 }}>
-                        {r.senderName?.[0]}
-                    </Avatar>
+                    <Avatar
+                        src={r.senderAvatar || undefined}
+                        icon={<UserOutlined />}
+                        size={32}
+                        style={{
+                            background: r.senderAvatar ? 'transparent' : 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                            fontSize: 14,
+                            flexShrink: 0,
+                        }}
+                    />
                     <div>
                         <div style={{ fontSize: 13, fontWeight: 500 }}>{r.senderName}</div>
                         <div style={{ fontSize: 11, color: '#8c8c8c' }}>

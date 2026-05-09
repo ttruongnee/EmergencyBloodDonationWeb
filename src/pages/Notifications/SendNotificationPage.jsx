@@ -6,7 +6,7 @@ import {
 } from 'antd'
 import {
     ArrowLeftOutlined, SendOutlined,
-    GlobalOutlined, BellOutlined,
+    GlobalOutlined, BellOutlined, UserOutlined
 } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -360,12 +360,14 @@ export default function SendNotificationPage() {
                                         optionRender={(opt) => (
                                             <Space>
                                                 <Avatar
-                                                    src={opt.data.render?.avatar}
+                                                    src={opt.data.render?.avatar || undefined}
+                                                    icon={<UserOutlined />}
                                                     size={28}
-                                                    style={{ background: '#e53935' }}
-                                                >
-                                                    {opt.data.render?.name?.[0]}
-                                                </Avatar>
+                                                    style={{
+                                                        background: opt.data.render?.avatar ? 'transparent' : '#e53935',
+                                                        fontSize: 16,
+                                                    }}
+                                                />
                                                 <div>
                                                     <div style={{ fontSize: 13, fontWeight: 500 }}>
                                                         {opt.data.render?.name}
@@ -424,14 +426,17 @@ export default function SendNotificationPage() {
                                     padding: 16, color: '#fff',
                                 }}>
                                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                                        <div style={{
-                                            width: 40, height: 40, borderRadius: 10,
-                                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
-                                            display: 'flex', alignItems: 'center',
-                                            justifyContent: 'center', flexShrink: 0,
-                                        }}>
-                                            🩸
-                                        </div>
+                                        <img
+                                            src="/icon.png"
+                                            alt="Logo"
+                                            style={{
+                                                width: 70,
+                                                height: 70,
+                                                borderRadius: 10,
+                                                objectFit: 'cover',
+                                                flexShrink: 0,
+                                            }}
+                                        />
                                         <div style={{ flex: 1, minWidth: 0 }}>
                                             <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
                                                 {preview.title}

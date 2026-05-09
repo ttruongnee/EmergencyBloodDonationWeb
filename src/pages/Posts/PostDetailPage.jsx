@@ -116,8 +116,15 @@ export default function PostDetailPage() {
                     style={{ cursor: r.donorAccountId ? 'pointer' : 'default' }}
                     onClick={() => r.donorAccountId && navigate(`/users/${r.donorAccountId}`)}
                 >
-                    <Avatar src={r.donorAvatar} icon={<UserOutlined />} size={32}
-                        style={{ background: '#e53935', flexShrink: 0 }}
+                    <Avatar
+                        src={r.donorAvatar || undefined}
+                        icon={<UserOutlined />}
+                        size={32}
+                        style={{
+                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                            flexShrink: 0,
+                            fontSize: 13,
+                        }}
                     />
                     <span style={{ fontWeight: 500, fontSize: 13, color: '#1e88e5' }}>
                         {r.donorName}
@@ -287,9 +294,15 @@ export default function PostDetailPage() {
                                 style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                                 onClick={() => post.postedByAccountId && navigate(`/users/${post.postedByAccountId}`)}
                             >
-                                <Avatar src={post.postedByAvatar} size={44} style={{ background: '#e53935' }}>
-                                    {post.postedByName?.[0]}
-                                </Avatar>
+                                <Avatar
+                                    src={post.postedByAvatar || undefined}
+                                    icon={<UserOutlined />}
+                                    size={44}
+                                    style={{
+                                        background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                                        fontSize: 18,
+                                    }}
+                                />
                                 <div>
                                     <div style={{ fontWeight: 600, color: '#1e88e5' }}>{post.postedByName}</div>
                                     <div style={{ fontSize: 12, color: '#8c8c8c' }}>@{post.postedByUsername}</div>
