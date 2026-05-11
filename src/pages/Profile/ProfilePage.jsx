@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
     Card, Row, Col, Avatar, Button, Form,
     Input, Tag, Descriptions, Divider, App,
-    Spin, Space, Modal,
+    Spin, Space, Modal, Image
 } from 'antd'
 import {
     UserOutlined, LockOutlined,
@@ -41,6 +41,7 @@ export default function ProfilePage() {
     const [editForm] = Form.useForm()
     const [editOpen, setEditOpen] = useState(false)
     const [uploading, setUploading] = useState(false)
+    const [previewAvatar, setPreviewAvatar] = useState(null)
 
     // ── Fetch account ──────────────────────────────────────────────────────────
     const { data: res, isLoading } = useQuery({
@@ -130,17 +131,24 @@ export default function ProfilePage() {
                     <Card style={cardStyle}>
                         <div style={{ textAlign: 'center' }}>
                             <div style={{ position: 'relative', display: 'inline-block', marginBottom: 4 }}>
-                                <Avatar
-                                    src={account?.avatar}
-                                    icon={<UserOutlined />}
-                                    size={116}
-                                    style={{
-                                        background: 'linear-gradient(135deg, #e53935, #b71c1c)',
-                                        fontSize: 36,
-                                        border: '4px solid #fff',
-                                        boxShadow: '0 4px 16px rgba(229,57,53,0.25)',
+                                <div
+                                    onClick={() => {
+                                        if (account?.avatar) setPreviewAvatar(account.avatar)
                                     }}
-                                />
+                                    style={{ cursor: account?.avatar ? 'pointer' : 'default' }}
+                                >
+                                    <Avatar
+                                        src={account?.avatar}
+                                        icon={<UserOutlined />}
+                                        size={116}
+                                        style={{
+                                            background: 'linear-gradient(135deg, #e53935, #b71c1c)',
+                                            fontSize: 36,
+                                            border: '4px solid #fff',
+                                            boxShadow: '0 4px 16px rgba(229,57,53,0.25)',
+                                        }}
+                                    />
+                                </div>
                                 <label
                                     htmlFor="avatar-upload"
                                     style={{
@@ -412,6 +420,21 @@ export default function ProfilePage() {
                         </Button>
                     </div>
                 </Form>
+            </Modal>
+            <Modal
+                open={!!previewAvatar}
+                footer={null}
+                onCancel={() => setPreviewAvatar(null)}
+                width={600}
+                centered
+            >
+                {previewAvatar && (
+                    <Image
+                        src={previewAvatar}
+                        style={{ width: '100%', borderRadius: 8 }}
+                        preview={false}
+                    />
+                )}
             </Modal>
         </div>
     )

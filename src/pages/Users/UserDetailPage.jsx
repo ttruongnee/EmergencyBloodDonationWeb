@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import {
     Card, Row, Col, Avatar, Tag, Button,
     Descriptions, Space, Spin, App, Popconfirm,
-    Divider, Table, Statistic,
+    Divider, Table, Statistic, Modal, Image,
 } from 'antd'
 import {
     UserOutlined, ArrowLeftOutlined,
@@ -41,6 +42,7 @@ export default function UserDetailPage() {
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const { message, modal } = App.useApp()
+    const [previewAvatar, setPreviewAvatar] = useState(null)
 
     // 1. Account info
     const { data: accRes, isLoading: l1 } = useQuery({
@@ -194,7 +196,15 @@ export default function UserDetailPage() {
                         {/* Profile card */}
                         <Card style={cardStyle}>
                             <div style={{ textAlign: 'center', padding: '16px 0 8px' }}>
-                                <div style={{ position: 'relative', display: 'inline-block' }}>
+                                <div
+                                    onClick={() => {
+                                        if (account?.avatar) setPreviewAvatar(account.avatar)
+                                    }}
+                                    style={{
+                                        cursor: account?.avatar ? 'pointer' : 'default',
+                                        display: 'inline-block',
+                                    }}
+                                >
                                     <Avatar
                                         src={account.avatar}
                                         icon={<UserOutlined />}
@@ -421,6 +431,22 @@ export default function UserDetailPage() {
                     </Space>
                 </Col>
             </Row>
+            <Modal
+                open={!!previewAvatar}
+                footer={null}
+                onCancel={() => setPreviewAvatar(null)}
+                width={600}
+                centered
+                bodyStyle={{ padding: 0 }}
+            >
+                {previewAvatar && (
+                    <Image
+                        src={previewAvatar}
+                        style={{ width: '100%', borderRadius: 8 }}
+                        preview={false}
+                    />
+                )}
+            </Modal>
         </div>
     )
 }

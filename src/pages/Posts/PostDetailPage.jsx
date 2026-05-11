@@ -17,6 +17,7 @@ import donationApi from '../../api/donationApi'
 import PageHeader from '../../components/common/PageHeader'
 import StatusTag from '../../components/common/StatusTag'
 import { formatDateTime, getDonationStatusMeta } from '../../utils/helpers'
+import PostImages from '../../components/common/PostImages';
 
 const { Text } = Typography
 
@@ -108,7 +109,6 @@ export default function PostDetailPage() {
     const donationColumns = [
         {
             title: 'Người hiến',
-            align: 'center',
             key: 'donor',
             width: 220,
             render: (_, r) => (
@@ -375,20 +375,8 @@ export default function PostDetailPage() {
                                 styles={{ body: { padding: 12 } }}
                             >
                                 <Image.PreviewGroup>
-                                    <div style={{
-                                        display: 'grid',
-                                        gridTemplateColumns: `repeat(${post.images.length}, 1fr)`,
-                                        gap: 8,
-                                    }}>
-                                        {post.images.map((img, i) => (
-                                            <Image
-                                                key={i}
-                                                src={img}
-                                                width="100%"
-                                                height={180}
-                                                style={{ borderRadius: 8, objectFit: 'cover', cursor: 'pointer', display: 'block' }}
-                                            />
-                                        ))}
+                                    <div style={{ maxWidth: 500, margin: '0 auto' }}>
+                                        <PostImages images={post.images} />
                                     </div>
                                 </Image.PreviewGroup>
                             </Card>
