@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     Table, Card, Input, Select, Button,
     Avatar, Tag, App, Popconfirm, Tooltip,
@@ -41,11 +41,19 @@ export default function PostListPage() {
     const [filters, setFilters] = useState({
         status: '',
         bloodType: '',
+        search: '',
         page: 1,
         pageSize: PAGE_SIZE_DEFAULT,
-    })
-    const [search, setSearch] = useState('')
+    });
+    const [searchInput, setSearchInput] = useState('');
     const [selectedIds, setSelectedIds] = useState([])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setFilters(prev => ({ ...prev, search: searchInput, page: 1 }));
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     const { data: res, isLoading } = useQuery({
         queryKey: ['posts-admin', filters],
@@ -53,10 +61,11 @@ export default function PostListPage() {
             postApi.getAllForAdmin({
                 status: filters.status || undefined,
                 bloodType: filters.bloodType || undefined,
+                search: filters.search || undefined,
                 page: filters.page,
                 pageSize: filters.pageSize,
             }),
-    })
+    });
 
     const posts = res?.data?.items ?? []
     const total = res?.data?.totalCount ?? 0
@@ -295,18 +304,6 @@ export default function PostListPage() {
         preserveSelectedRowKeys: false,
     }
 
-    // Client-side search
-    const filtered = posts.filter((p) => {
-        if (!search.trim()) return true
-        const q = search.toLowerCase()
-        return (
-            p.patientName?.toLowerCase().includes(q) ||
-            p.postedByName?.toLowerCase().includes(q) ||
-            p.hospitalName?.toLowerCase().includes(q) ||
-            p.phone?.includes(q)
-        )
-    })
-
     const columns = [
         {
             title: 'Bài đăng',
@@ -373,7 +370,7 @@ export default function PostListPage() {
             title: 'Nhóm máu',
             align: 'center',
             dataIndex: 'bloodType',
-            width: 80,
+            width: 100,
             render: (v) => (
                 <Tag color={BLOOD_COLORS[v] ?? 'default'} style={{ fontWeight: 700, fontSize: 13 }}>
                     {v}
@@ -502,10 +499,10 @@ export default function PostListPage() {
                 {/* Filter bar */}
                 <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
                     <Input
-                        placeholder="Tìm theo tên bệnh nhân, người đăng, bệnh viện, số điện thoại..."
+                        placeholder="Tìm theo tên bệnh nhân, người đăng, bệnh viện, số điện thoại"
                         prefix={<SearchOutlined style={{ color: '#bbb' }} />}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                         allowClear
                         style={{ flex: '1 1 200px' }}
                     />
@@ -515,7 +512,7 @@ export default function PostListPage() {
                             setSelectedIds([])
                             setFilters((f) => ({ ...f, bloodType: v, page: 1 }))
                         }}
-                        style={{ width: 250 }}
+                        style={{ width: 180 }}
                         placeholder="Nhóm máu"
                         options={[
                             { label: 'Tất cả nhóm máu', value: '' },
@@ -613,7 +610,7 @@ export default function PostListPage() {
                 <Table
                     rowSelection={rowSelection}
                     columns={columns}
-                    dataSource={filtered}
+                    dataSource={posts}
                     rowKey="id"
                     loading={isLoading}
                     size="middle"

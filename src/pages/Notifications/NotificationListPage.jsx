@@ -59,12 +59,12 @@ export default function NotificationListPage() {
                     </div>
                     {r.content && (
                         <div style={{
-                            fontSize: 12, color: '#8c8c8c',
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            maxWidth: 320,
+                            fontSize: 12,
+                            color: '#8c8c8c',
+                            whiteSpace: 'nowrap',      // không cho xuống dòng
+                            overflow: 'hidden',        // ẩn phần tràn
+                            textOverflow: 'ellipsis',  // thêm dấu "..."
+                            maxWidth: 550,             // hoặc bỏ maxWidth nếu muốn tự động co giãn theo cột
                         }}>
                             {r.content}
                         </div>

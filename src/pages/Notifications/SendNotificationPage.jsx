@@ -185,7 +185,7 @@ export default function SendNotificationPage() {
                             >
                                 <TextArea
                                     placeholder="Nội dung chi tiết của thông báo..."
-                                    rows={4}
+                                    autoSize={{ minRows: 4, maxRows: 10 }}
                                     maxLength={1000}
                                     showCount
                                 />
@@ -421,10 +421,10 @@ export default function SendNotificationPage() {
                                 style={cardStyle}
                             >
                                 <div style={{
-                                    background: '#F0F0F5',        // xám nhạt thay vì #1a1a2e
+                                    background: '#F0F0F5',
                                     borderRadius: 12,
                                     padding: 16,
-                                    border: '1px solid #E0E0E0',  // thêm viền nhẹ
+                                    border: '1px solid #E0E0E0',
                                 }}>
                                     <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                                         <img
@@ -445,11 +445,18 @@ export default function SendNotificationPage() {
                                                 {preview.title}
                                             </div>
                                             {preview.content && (
-                                                <div style={{ fontSize: 13, color: '#595959', lineHeight: 1.5 }}>
+                                                <div style={{
+                                                    fontSize: 13,
+                                                    color: '#595959',
+                                                    lineHeight: 1.5,
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                    marginTop: 4,
+                                                }}>
                                                     {preview.content}
                                                 </div>
                                             )}
-
                                         </div>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     Table, Card, Input, Button, Space,
     Avatar, Tag, App, Tooltip,
@@ -29,20 +29,30 @@ export default function ReportListPage() {
 
     const [filters, setFilters] = useState({
         status: '',
+        search: '',
         page: 1,
         pageSize: 10,
     })
-    const [search, setSearch] = useState('')
+    const [searchInput, setSearchInput] = useState('')
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setFilters(prev => ({ ...prev, search: searchInput, page: 1 }))
+        }, 500)
+        return () => clearTimeout(timer)
+    }, [searchInput])
 
     const { data: res, isLoading } = useQuery({
         queryKey: ['reports', filters],
         queryFn: () =>
             reportApi.getAll({
                 status: filters.status || undefined,
+                search: filters.search || undefined,
                 page: filters.page,
                 pageSize: filters.pageSize,
             }),
     })
+
 
     const reports = res?.data?.items ?? []
     const total = res?.data?.totalCount ?? 0
@@ -92,16 +102,6 @@ export default function ReportListPage() {
             onOk: () => reject(record.id),
         })
     }
-
-    const filtered = reports.filter((r) => {
-        if (!search.trim()) return true
-        const q = search.toLowerCase()
-        return (
-            r.reporterName?.toLowerCase().includes(q) ||
-            r.postPatientName?.toLowerCase().includes(q) ||
-            r.reason?.toLowerCase().includes(q)
-        )
-    })
 
     const columns = [
         {
@@ -290,18 +290,18 @@ export default function ReportListPage() {
             <Card style={{ borderRadius: 12, border: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
                 <div style={{ marginBottom: 16 }}>
                     <Input
-                        placeholder="Tìm theo người báo cáo, tên BN, lý do..."
+                        placeholder="Tìm theo người báo cáo, tên bệnh nhân, lý do"
                         prefix={<SearchOutlined style={{ color: '#bbb' }} />}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                         allowClear
-                        style={{ maxWidth: 380 }}
+                        style={{ width: '100%' }}
                     />
                 </div>
 
                 <Table
                     columns={columns}
-                    dataSource={filtered}
+                    dataSource={reports}
                     rowKey="id"
                     loading={isLoading}
                     size="middle"

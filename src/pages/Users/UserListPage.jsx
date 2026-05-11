@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
     Table, Card, Input, Space, Button, Avatar, App, Tooltip, Modal, Form
 } from 'antd'
@@ -23,11 +23,20 @@ export default function UserListPage() {
 
     const [filters, setFilters] = useState({
         status: '',
+        search: '',
         page: 1,
         pageSize: PAGE_SIZE_DEFAULT,
-    })
-    const [search, setSearch] = useState('')
+    });
+    const [searchInput, setSearchInput] = useState('');
     const [adminModalOpen, setAdminModalOpen] = useState(false)
+
+    // Debounce tìm kiếm 500ms
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setFilters(prev => ({ ...prev, search: searchInput, page: 1 }));
+        }, 500);
+        return () => clearTimeout(timer);
+    }, [searchInput]);
 
     const { data: res, isLoading } = useQuery({
         queryKey: ['accounts', filters],
@@ -35,6 +44,7 @@ export default function UserListPage() {
             accountApi.getAll({
                 role: 'user',
                 status: filters.status || undefined,
+                search: filters.search || undefined,
                 page: filters.page,
                 pageSize: filters.pageSize,
             }),
@@ -78,17 +88,6 @@ export default function UserListPage() {
             onOk: () => updateStatus({ id: record.id, status: isBanned ? 'active' : 'banned' }),
         })
     }
-
-    const filtered = accounts.filter((a) => {
-        if (!search.trim()) return true
-        const q = search.toLowerCase()
-        return (
-            a.name?.toLowerCase().includes(q) ||
-            a.username?.toLowerCase().includes(q) ||
-            a.email?.toLowerCase().includes(q) ||
-            a.phone?.includes(q)
-        )
-    })
 
     const columns = [
         {
@@ -244,20 +243,18 @@ export default function UserListPage() {
             </div>
 
             <Card style={{ borderRadius: 12, border: 'none', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
-                <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <Input
-                        placeholder="Tìm theo tên, username, email, SĐT..."
-                        prefix={<SearchOutlined style={{ color: '#bbb' }} />}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        allowClear
-                        style={{ width: 320, flex: '1 1 240px' }}
-                    />
-                </div>
+                <Input
+                    placeholder="Tìm theo tên, username, email, số điện thoại"
+                    prefix={<SearchOutlined style={{ color: '#bbb' }} />}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    allowClear
+                    style={{ width: '100%', marginBottom: 16 }}
+                />
 
                 <Table
                     columns={columns}
-                    dataSource={filtered}
+                    dataSource={accounts}
                     rowKey="id"
                     loading={isLoading}
                     size="middle"
